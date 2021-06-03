@@ -24,19 +24,11 @@ const buildResultObject = (promise: Promise<any>) => {
     return promise
         .then(result => {
             if(result.id) {
-                return {
-                    success: true,
-                    result }
+                return serverResponseController(true, result)
             } else {
-                return {
-                    success: false,
-                    message: "error in cathing friend"
-                }
+                return serverResponseController(false, {message: "error in cathing friend"})
             }
 
         })
-        .catch(result => ({
-            success: false,
-            message: "error in cathing friend"
-        }));
+        .catch(result => (serverResponseController(false, {message: "error in cathing friend"})));
 };
