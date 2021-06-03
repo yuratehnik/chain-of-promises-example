@@ -2,9 +2,9 @@ import React from "react";
 import {userRequestResponse, userType} from "../types/types";
 import {USER_API} from "../config/config";
 
-export const getUserById = (id: number): Promise<userType> => {
+export const getUserById = (id: number, link: string = USER_API): Promise<userType> => {
     return new Promise((resolve, reject) => {
-        fetch(`${USER_API}${id}`)//https://jsonplaceholder.typicode.com/users/
+        fetch(`${link}${id}`)
             .then((response) => response.json())
             .then((response)=> {
                 resolve(response)
