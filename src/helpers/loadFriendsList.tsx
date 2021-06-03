@@ -11,7 +11,6 @@ export const loadFriends = (friends: number[]): Promise<any> => {
 
     let arrayOfUsers: any[] = []
 
-    // @ts-ignore
     let listOfRequests: Promise<any> = friends.reduce( async (accumulator: Promise<any>, id)=>{
 
         await accumulator
@@ -25,12 +24,8 @@ export const loadFriends = (friends: number[]): Promise<any> => {
 
     }, Promise.resolve())
 
-    listOfRequests.then((data)=>{
-        arrayOfUsers.push(data)
-
-        console.log(arrayOfUsers);
+    return listOfRequests.then((data)=>{
+        arrayOfUsers.push(data);
+        return arrayOfUsers;
     })
-
-    return listOfRequests
-        .then(data=>data)
 }

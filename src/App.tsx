@@ -24,9 +24,8 @@ function App() {
               setUser(user)
               loadFriends([2,3,4])
                   .then((data)=> {
-                      /*setDataLoading(false)
-                      setFriends(data.map((item: userRequestResponse)=>item.result))*/
-                      console.log(data)
+                      setDataLoading(false)
+                      setFriends(data.map((item: userRequestResponse)=>item))
                   })
           })
   }
