@@ -9,24 +9,28 @@ export const loadFriends = (friends: number[]): Promise<any> => {
         })
     }
 
-    let listOfRequests = friends.map((id)=>{
+    let arrayOfUsers: any[] = []
+
+    // @ts-ignore
+    let listOfRequests: Promise<any> = friends.reduce( async (accumulator: Promise<any>, id)=>{
+
+        await accumulator
+            .then((data)=>{
+                if(data){
+                    arrayOfUsers.push(data)
+                }
+            });
+
         return getUserById(id)
+
+    }, Promise.resolve())
+
+    listOfRequests.then((data)=>{
+        arrayOfUsers.push(data)
+
+        console.log(arrayOfUsers);
     })
 
-    /*let TEST_ERRORS_REQUEST_LIST = [
-        getUserById(5),
-        getUserById(3, "https://jsonplaceholder.typicode.com/users/353553"),
-        getUserById(318, "https://google.com/"),
-        getUserById(4)
-    ]*/
-
-    return Promise.allSettled(listOfRequests)
-        .then(
-            (results: any[]) => {
-                let filteredArray = results.filter((item)=>{
-                    return item.status === "fulfilled" && item.value?.id
-                })
-                return filteredArray.map(item=>(serverResponseController(true, item.value)))
-            }
-        );
+    return listOfRequests
+        .then(data=>data)
 }
