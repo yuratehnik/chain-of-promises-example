@@ -9,26 +9,24 @@ export const loadFriends = (friends: number[]): Promise<any> => {
         })
     }
 
-    let listOfRequests = friends.map(getUserById)
+    let listOfRequests = friends.map((id)=>{
+        return getUserById(id)
+    })
 
-    return Promise
-        .all(listOfRequests.map((item: Promise<any>)=>buildResultObject(item)))
+    /*let TEST_ERRORS_REQUEST_LIST = [
+        getUserById(5),
+        getUserById(3, "https://jsonplaceholder.typicode.com/users/353553"),
+        getUserById(318, "https://google.com/"),
+        getUserById(4)
+    ]*/
+
+    return Promise.allSettled(listOfRequests)
         .then(
             (results: any[]) => {
-                return results.filter((item)=>(item.success))
+                let filteredArray = results.filter((item)=>{
+                    return item.status === "fulfilled" && item.value?.id
+                })
+                return filteredArray.map(item=>(serverResponseController(true, item.value)))
             }
         );
 }
-
-const buildResultObject = (promise: Promise<any>) => {
-    return promise
-        .then(result => {
-            if(result.id) {
-                return serverResponseController(true, result)
-            } else {
-                return serverResponseController(false, {message: "error in cathing friend"})
-            }
-
-        })
-        .catch(result => (serverResponseController(false, {message: "error in cathing friend"})));
-};
